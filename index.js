@@ -100,7 +100,10 @@ const proxy_response = (body, headers = {}, statusCode = 200) => {
     return {statusCode, headers, body}
 }
 
-const setup = async (swaggerFile) => {
+const setup = async (swaggerFile, urlSwaggerFile) => {
+    if(!urlSwaggerFile) {
+        urlSwaggerFile = swaggerFile;
+    }
     const swaggerDoc = await fs.readFile(swaggerFile);
 
     return async function (event, context, callback) {
@@ -112,7 +115,7 @@ const setup = async (swaggerFile) => {
 
         if (resource === 'index.html') {
             return proxy_response(
-                await generateHTML(swaggerFile),
+                await generateHTML(urlSwaggerFile),
                 {"content-type": "text/html"}
             );
         }
